@@ -13,9 +13,7 @@ module fstack
                 stack%point = stack%point + 1
                 stack%stack(stack%point) = x
             else ! Uh Oh, We have an overflow!
-                print *, "pushing ",x ," pointer is now ", stack%point + 1 
-                write(0, *) "Stack Overflow : index (", stack%point + 1, ") is too large for size (", stack%stack_size, ")"
-                error stop "OVERFLOW"
+                write(0, *) "WARNING : Stack Overflow index (", stack%point + 1, ") is too large for size ", stack%stack_size
             end if
         end subroutine fs_push
         subroutine fs_pop(stack, x) ! Pop element from the stack
@@ -26,8 +24,7 @@ module fstack
                 stack%stack(stack%point) = 0
                 stack%point = stack%point - 1
             else ! Uh Oh, Underflow!
-                write(0, *) "Stack Underflow"
-                error stop "UNDERFLOW"
+                write(0, *) "WARNING : Stack Underflow"
             end if
         end subroutine fs_pop
         function fs_create_stack(x) result(stack) ! Create a new stack with size x
