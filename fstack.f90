@@ -53,12 +53,14 @@ module fstack
             type(fs_stack), intent(inout) :: stack
             integer, intent(in) :: x
             type(fs_stack) :: tmpstack
+            integer :: upper
             tmpstack = fs_create_stack(stack%stack_size)
             tmpstack%stack(1:stack%stack_size) = stack%stack(1:stack%stack_size)
             tmpstack%stack_size = stack%stack_size
             deallocate(stack%stack)
             allocate(stack%stack(x))
-            stack%stack(1:tmpstack%stack_size) = tmpstack%stack(1:tmpstack%stack_size)
+            upper = min(x, tmpstack%stack_size) ! allow for increase or decrease of stack_size
+            stack%stack(1:upper) = tmpstack%stack(1:upper)
             stack%stack_size = x
             deallocate(tmpstack%stack)
         end subroutine fs_realloc_stack
