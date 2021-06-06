@@ -25,6 +25,7 @@ module fstack
                 stack%point = stack%point - 1
             else ! Uh Oh, Underflow!
                 write(0, *) "WARNING : Stack Underflow"
+                x = 0
             end if
         end subroutine fs_pop
         function fs_create_stack(x) result(stack) ! Create a new stack with size x
@@ -36,14 +37,19 @@ module fstack
         end function fs_create_stack
         subroutine fs_peek(stack, x) ! Just take a quick peek at the top element, which boils down to 1. Pop top, store top, re push top.
             type(fs_stack), intent(inout) :: stack
-            real, intent(out) :: x
+            real, intent(inout) :: x
             call fs_pop(stack, x)
             call fs_push(stack, x)
         end subroutine fs_peek
         subroutine fs_reset_stack(stack) ! Reset a stack back to all zeros.
             type(fs_stack), intent(inout) :: stack
+            integer :: var
+            call fs_cleanup_stack(stack)
             allocate(stack%stack(stack%stack_size))
-            stack%stack = 0
+            do var = 0, stack%stack_size
+                stack%stack(var:var) = 0
+                print *, stack%stack(var:var)
+            end do
             stack%point = 1
         end subroutine fs_reset_stack
         subroutine fs_realloc_stack(stack, x) ! Reallocate a stack to size x, by making a copy, dealloc and reallocing the main stack, and copying the stuff we need and the pointer, while updaing the size.
