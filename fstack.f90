@@ -6,14 +6,16 @@ module fstack
         integer :: stack_size ! Stores current stack size
     end type fs_stack
     contains
-        subroutine fs_push(stack, x) ! Push element onto the stack
+        subroutine fs_push(stack, x, of) ! Push element onto the stack
             type(fs_stack), intent(inout) :: stack
+            integer, optional, intent(out) :: of ! Optional overflow param
             real, intent(in) :: x
             if (stack%point < stack%stack_size) then
                 stack%point = stack%point + 1
                 stack%stack(stack%point) = x
+                of = 0 ! No overflow
             else ! Uh Oh, We have an overflow!
-                write(0, *) "WARNING : Stack Overflow index (", stack%point + 1, ") is too large for size ", stack%stack_size
+                of = 1 ! set overflow param, dont modify stack
             end if
         end subroutine fs_push
         subroutine fs_pop(stack, x) ! Pop element from the stack
